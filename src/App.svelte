@@ -1,4 +1,5 @@
 <script>
+    import { feature } from 'topojson-client';
 	import { onMount } from "svelte";
 	import { bbox } from "@turf/turf";
 	import { ckmeans } from 'simple-statistics';
@@ -11,6 +12,11 @@
 	import Loader from "./ui/Loader.svelte";
 	import Select from "./ui/Select.svelte";
 	import { getData, getNomis, getBreaks, getTopo, processData } from "./utils.js";
+
+	import lad2015topo from "./geogLA2015EW.json";
+	console.log({lad2015topo});
+	let lad2015feature = feature(lad2015topo, lad2015topo.objects.LAD15merc);
+	console.log({lad2015feature});
 
 	// CONFIG
 	// const apiurl = "https://www.nomisweb.co.uk/api/v01/dataset/";
@@ -81,6 +87,8 @@
 	let mapLoaded = false;
 	let mapZoom = null;
 
+	let ladFillLayer;
+
 	// FUNCTIONS
 	function updateURL() {
 		let hash = location.hash;
@@ -108,6 +116,7 @@
 	function initialise() {
 		getTopo(ladtopo.url, ladtopo.layer)
 			.then((geo) => {
+			    console.log({geo});
 				ladbounds = geo;
 
 				let lookup = {};
@@ -219,35 +228,39 @@
 				let breaks = getBreaks(chunks);
 				dataset.lsoa.breaks = breaks;
 
+				const setColours = function(d, i) {
+				    d.color = colors.base[i];
+				    d.muted = colors.muted[i];
+				    d.fill = colors.base[i];
+                };
+
 				dataset.lsoa.data.forEach((d) => {
-					if (d.perc <= breaks[1]) {
-						d.color = colors.base[0];
-						d.muted = colors.muted[0];
-						d.fill = colors.base[0];
-					} else if (d.perc <= breaks[2]) {
-						d.color = colors.base[1];
-						d.muted = colors.muted[1];
-						d.fill = colors.base[1];
-					} else if (d.perc <= breaks[3]) {
-						d.color = colors.base[2];
-						d.muted = colors.muted[2];
-						d.fill = colors.base[2];
-					} else if (d.perc <= breaks[4]) {
-						d.color = colors.base[3];
-						d.muted = colors.muted[3];
-						d.fill = colors.base[3];
-					} else {
-						d.color = colors.base[4];
-						d.muted = colors.muted[4];
-						d.fill = colors.base[4];
-					}
+					for (let i=0; i<4; i++) {
+                        if (d.perc <= breaks[i + 1]) {
+                            setColours(d, i);
+                            return;
+                        }
+                    }
+                    setColours(d, 4);
 				});
 
 				let proc = processData(res, lsoalookup);
+				console.log({proc});
 				dataset.lsoa.index = proc.lsoa.index;
 
 				dataset.lad.data = proc.lad.data;
 				dataset.lad.index = proc.lad.index;
+
+				// TODO: use proper LAD breaks instead of the following hack
+				dataset.lad.data.forEach((d) => {
+					for (let i=0; i<4; i++) {
+                        if (d.perc <= breaks[i + 1]) {
+                            setColours(d, i);
+                            return;
+                        }
+                    }
+                    setColours(d, 4);
+				});
 
 				let ladVals = proc.lad.data.map(d => d.perc);
 				let ladChunks = ckmeans(ladVals, 5);
@@ -623,5 +636,37 @@
 				on:select={() => active.lsoa.selected = null} />
 		</MapSource>
 	{/if}
+    <MapSource
+        id="lad2015line"
+        type="geojson"
+        data={lad2015feature}>
+        <MapLayer
+            id="lad2015line"
+            source="lad2015line"
+            type="line"
+            paint={{
+                'line-color': 'rgba(255, 0, 0, 0.9)'
+            }}
+             />
+    </MapSource>
+    <MapSource
+        id="lad2015"
+        type="geojson"
+        data={lad2015feature}
+        props={{promoteId: "AREACD"}}>
+        <MapLayer
+            bind:this={ladFillLayer}
+            id="lad2015"
+            source="lad2015"
+            type="fill"
+            data={selectData}
+            paint={{
+                'fill-color': ['case',
+                    ['!=', ['feature-state', 'color'], null], ['feature-state', 'color'],
+                    'rgba(255, 0, 0, 0.1)'
+                ]
+            }}
+             />
+    </MapSource>
 </Map>
 {/if}

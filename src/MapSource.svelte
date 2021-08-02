@@ -60,6 +60,7 @@
 	function addSource() {
 		console.log(id + ' map source loading...');
   	if (type == "geojson") {
+	  	console.log(props);
 	  	if (data) {
 		  	map.addSource(id, {
 	  		  type: type,

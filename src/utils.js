@@ -11,14 +11,13 @@ export async function getData(url) {
 export async function getTopo(url, layer) {
   let response = await fetch(url);
   let topojson = await response.json();
-	let geojson = await feature(topojson, layer);
-  return geojson;
+  return feature(topojson, layer);
 }
 
 export async function getNomis(url, code) {
   let response = await fetch(url);
   let string = await response.text();
-	let data = await csvParse(string, (d) => {
+	let data = csvParse(string, (d) => {
 		return {
 			code: d['GEOGRAPHY_CODE'],
 			value: +d[code],
