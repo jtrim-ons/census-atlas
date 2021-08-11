@@ -12,11 +12,10 @@
 	import Loader from "./ui/Loader.svelte";
 	import Select from "./ui/Select.svelte";
 	import { getData, getNomis, getBreaks, getTopo, processData, setColours } from "./utils.js";
+	import colors from './colors.js';
 
 	import lad2015topo from "./geogLA2015EW.json";
-	console.log({lad2015topo});
 	let lad2015feature = feature(lad2015topo, lad2015topo.objects.LAD15merc);
-	console.log({lad2015feature});
 
 	// CONFIG
 	// const apiurl = "https://www.nomisweb.co.uk/api/v01/dataset/";
@@ -36,10 +35,6 @@
 		code: "areacd"
 	};
 	const lsoadata = "https://bothness.github.io/census-atlas/data/lsoa2011_lad2020.csv";
-	const colors = {
-		base: ["#d5f690", "#5bc4b1", "#2e9daa", "#0079a2", "#005583", "#cccccc"],
-		muted: ["#f5fce2", "#d7ede8", "#cbe2e5", "#c2d7e3", "#bdccd9", "#f0f0f0"]
-	};
 
 	// OBJECTS
 	let map = null;
@@ -130,11 +125,10 @@
 					lat: +((bounds[1] + bounds[3]) / 2).toFixed(5)
 				};
 
+				ladlookup = lookup;
 				return lookup;
 			})
 			.then((lookup) => {
-				ladlookup = lookup;
-
 				getData(lsoadata)
 					.then((data) => {
 						let lookup = {};
@@ -286,45 +280,20 @@
 		selectData = newdata;
 	}
 
-	function getSib(type, diff) {
-		if (type == 'lad') {
-			let index = selectData.lad.data.findIndex(d => d.code == active.lad.selected) + diff;
-			if (index >= 0 && index < selectData.lad.data.length) {
-				active.lsoa.selected = null;
-				active.lad.selected = selectData.lad.data[index].code;
-			}
-		} else if (type == 'lsoa') {
-			let filtered = selectData.lsoa.data.filter(d => ladlookup[active.lad.selected].children.includes(d.code));
-			let index = filtered.findIndex(d => d.code == active.lsoa.selected) + diff;
-			if (index >= 0 && index < filtered.length) {
-				active.lsoa.selected = filtered[index].code;
-
-				// Fit to parent LAD
-				let geometry = ladbounds.features.find(f => f.properties[ladtopo.code] == active.lad.selected).geometry;
-				let bounds = bbox(geometry);
-				map.fitBounds(bounds, { padding: 20 });
-			}
-		}
-	}
-
 	// CODE
 	// Update state based on URL
-	let hash = location.hash == '' ? '' : location.hash.split('/');
+	let hash = location.hash.split('/');
 	if (hash.length == 5) {
 		selectCode = hash[1];
-		active.lad.selected = hash[2] != '' ? hash[2] : '';
-		active.lsoa.selected = hash[3] != '' ? hash[3] : '';
+		active.lad.selected = hash[2] != '' ? hash[2] : null;
+		active.lsoa.selected = hash[3] != '' ? hash[3] : null;
 		let zxy = hash[4].split(',');
-		mapLocation = {
-			zoom: zxy[0],
-			lon: zxy[1],
-			lat: zxy[2]
-		}
+		mapLocation = {zoom: zxy[0], lon: zxy[1], lat: zxy[2]};
 	}
 
 	// Respond to URL change
 	window.onpopstate = () => {
-		let hash = location.hash == '' ? '' : location.hash.split('/');
+		let hash = location.hash.split('/');
 
 		if (selectCode != hash[1]) {
 			selectCode = hash[1];
@@ -440,40 +409,19 @@
 							{selectData.ew.data.count.toLocaleString()}
 							{selectItem.unit.toLowerCase()}s</small>
 					</div>
-					{#if active.lad.hovered || active.lad.highlighted || active.lad.selected}
-						<div>
+                    <div>
+                        {#if active.lad.hovered || active.lad.highlighted || active.lad.selected}
 							<hr style="border-top-color: #27A0CC" />
 							<strong>{active.lad.hovered ? ladlookup[active.lad.hovered].name : active.lad.highlighted ? ladlookup[active.lad.highlighted].name : ladlookup[active.lad.selected].name}</strong><br />
 							<strong class="text-lrg">
-								{#if active.lad.selected}<img src="./icons/chevron-left.svg" class="next" on:click={() => getSib('lad', -1)}>{/if}
 								{active.lad.hovered ? selectData.lad.index[active.lad.hovered].perc.toFixed(1) : active.lad.highlighted ? selectData.lad.index[active.lad.highlighted].perc.toFixed(1) : selectData.lad.index[active.lad.selected].perc.toFixed(1)}%
-								{#if active.lad.selected}<img src="./icons/chevron-right.svg" class="next" on:click={() => getSib('lad', 1)}>{/if}
 							</strong><br />
 							<small>{active.lad.hovered ? selectData.lad.index[active.lad.hovered].value.toLocaleString() : active.lad.highlighted ? selectData.lad.index[active.lad.highlighted].value.toLocaleString() : selectData.lad.index[active.lad.selected].value.toLocaleString()}
 								of
 								{active.lad.hovered ? selectData.lad.index[active.lad.hovered].count.toLocaleString() : active.lad.highlighted ? selectData.lad.index[active.lad.highlighted].count.toLocaleString() : selectData.lad.index[active.lad.selected].count.toLocaleString()}
 								{selectItem.unit.toLowerCase()}s</small>
-						</div>
-					{:else}
-						<div />
-					{/if}
-					{#if active.lsoa.hovered || active.lsoa.selected}
-						<div>
-							<hr style="border-top-color: #000000" />
-							<strong>{active.lsoa.hovered ? lsoalookup[active.lsoa.hovered].name.slice(-4) : lsoalookup[active.lsoa.selected].name.slice(-4)}</strong><br />
-							<strong class="text-lrg">
-								{#if active.lsoa.selected}<img src="./icons/chevron-left.svg" class="next" on:click={() => getSib('lsoa', -1)}>{/if}
-								{active.lsoa.hovered ? selectData.lsoa.index[active.lsoa.hovered].perc.toFixed(1) : selectData.lsoa.index[active.lsoa.selected].perc.toFixed(1)}%
-								{#if active.lsoa.selected}<img src="./icons/chevron-right.svg" class="next" on:click={() => getSib('lsoa', 1)}>{/if}
-							</strong><br />
-							<small>{active.lsoa.hovered ? selectData.lsoa.index[active.lsoa.hovered].value.toLocaleString() : selectData.lsoa.index[active.lsoa.selected].value.toLocaleString()}
-								of
-								{active.lsoa.hovered ? selectData.lsoa.index[active.lsoa.hovered].count.toLocaleString() : selectData.lsoa.index[active.lsoa.selected].count.toLocaleString()}
-								{selectItem.unit.toLowerCase()}s</small>
-						</div>
-					{:else}
-						<div />
-					{/if}
+                        {/if}
+                    </div>
 				{/if}
 			</div>
 		</div>
