@@ -9,9 +9,11 @@
 	import MapSource from "./MapSource.svelte";
 	import MapLayer from "./MapLayer.svelte";
 	import ColChart from "./charts/Histogram.svelte";
+	import SimpleKey from "./charts/SimpleKey.svelte";
 	import Loader from "./ui/Loader.svelte";
 	import Select from "./ui/Select.svelte";
 	import { getData, getNomis, getBreaks, getTopo, processData, setColours } from "./utils.js";
+	import { updateURL, replaceURL } from "./urlUtils.js";
 	import colors from './colors.js';
 
 	import lad2015topo from "./geogLA2015EW.json";
@@ -75,19 +77,6 @@
 	let ladFillLayer;
 
 	// FUNCTIONS
-	function updateURL() {
-		let hash = location.hash;
-		let newhash = `#/${selectCode}/${active.lad.selected ? active.lad.selected : ''}/${active.lsoa.selected ? active.lsoa.selected : ''}/${mapLocation.zoom},${mapLocation.lon},${mapLocation.lat}`;
-		if (hash != newhash) {
-			history.pushState(undefined, undefined, newhash);
-		}
-	}
-
-	function replaceURL() {
-		let hash = `#/${selectCode}/${active.lad.selected ? active.lad.selected : ''}/${active.lsoa.selected ? active.lsoa.selected : ''}/${mapLocation.zoom},${mapLocation.lon},${mapLocation.lat}`;
-		history.replaceState(undefined, undefined, hash);
-	}
-
 	function setIndicator(indicators, code) {
 		indicators.forEach(indicator => {
 			if (indicator.code && indicator.code == code) {
@@ -126,9 +115,7 @@
 				};
 
 				ladlookup = lookup;
-				return lookup;
-			})
-			.then((lookup) => {
+
 				getData(lsoadata)
 					.then((data) => {
 						let lookup = {};
@@ -144,9 +131,7 @@
 								ladlookup[d.parent].children.push(d.code);
 							}
 						});
-						return lookup;
-					})
-					.then((lookup) => {
+
 						lsoalookup = lookup;
 
 						fetch(tabledata)
@@ -181,7 +166,7 @@
 			};
 
 			loadData();
-			updateURL();
+			updateURL(selectCode, active, mapLocation);
 		}
 	}
 
@@ -222,6 +207,7 @@
 				let ladVals = proc.lad.data.map(d => d.perc);
 				let ladChunks = ckmeans(ladVals, 5);
 				dataset.lad.breaks = getBreaks(ladChunks);
+				console.log({breaks: dataset.lad.breaks});
 
 				dataset.lad.data.forEach((d) => {
 					for (let i=0; i<4; i++) {
@@ -253,7 +239,7 @@
 				active.lsoa.selected = null;
 			}
 			setColors();
-			updateURL();
+			updateURL(selectCode, active, mapLocation);
 		}
 	}
 
@@ -326,7 +312,7 @@
 				lon: center.lng.toFixed(5),
 				lat: center.lat.toFixed(5)
 			};
-			replaceURL();
+			replaceURL(selectCode, active, mapLocation);
 		});
 	}
 
@@ -383,14 +369,8 @@
 	<h1>2011 Census Atlas Demo</h1>
 	{#if indicators && selectItem}
 		{#if selectData}
-			<ColChart
-				data={selectData.lsoa.data}
-				dataIndex={selectData.lsoa.index}
-				breaks={selectData.lsoa.breaks}
-				avg={selectData.ew.data}
-				selected={active.lsoa.hovered ? active.lsoa.hovered : active.lsoa.selected}
-				parent={active.lad.hovered ? selectData.lad.index[active.lad.hovered].median.code : active.lad.highlighted ? selectData.lad.index[active.lad.highlighted].median.code : active.lad.selected ? selectData.lad.index[active.lad.selected].median.code : null}
-				siblings={active.lad.selected ? ladlookup[active.lad.selected].children : null}
+			<SimpleKey
+				breaks={selectData.lad.breaks}
 				key="perc" />
 		{/if}
 		<div id="infobox">

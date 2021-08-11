@@ -108,4 +108,3 @@ export function setColours(d, i, colours) {
     d.muted = colours.muted[i];
     d.fill = colours.base[i];
 };
-
