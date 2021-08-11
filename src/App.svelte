@@ -11,7 +11,7 @@
 	import ColChart from "./charts/Histogram.svelte";
 	import Loader from "./ui/Loader.svelte";
 	import Select from "./ui/Select.svelte";
-	import { getData, getNomis, getBreaks, getTopo, processData } from "./utils.js";
+	import { getData, getNomis, getBreaks, getTopo, processData, setColours } from "./utils.js";
 
 	import lad2015topo from "./geogLA2015EW.json";
 	console.log({lad2015topo});
@@ -29,16 +29,6 @@
 		layer: "LA2020EW",
 		code: "AREACD",
 		name: "AREANM"
-	};
-	const lsoabldg = {
-		url: "https://cdn.ons.gov.uk/maptiles/buildings/v1/{z}/{x}/{y}.pbf",
-		layer: "buildings",
-		code: "lsoa11cd"
-	};
-	const lsoabounds = {
-		url: "https://cdn.ons.gov.uk/maptiles/administrative/lsoa/v2/boundaries/{z}/{x}/{y}.pbf",
-		layer: "lsoa",
-		code: "areacd"
 	};
 	const ladvector = {
 		url: "https://cdn.ons.gov.uk/maptiles/administrative/authorities/v1/boundaries/{z}/{x}/{y}.pbf",
@@ -228,22 +218,6 @@
 				let breaks = getBreaks(chunks);
 				dataset.lsoa.breaks = breaks;
 
-				const setColours = function(d, i) {
-				    d.color = colors.base[i];
-				    d.muted = colors.muted[i];
-				    d.fill = colors.base[i];
-                };
-
-				dataset.lsoa.data.forEach((d) => {
-					for (let i=0; i<4; i++) {
-                        if (d.perc <= breaks[i + 1]) {
-                            setColours(d, i);
-                            return;
-                        }
-                    }
-                    setColours(d, 4);
-				});
-
 				let proc = processData(res, lsoalookup);
 				console.log({proc});
 				dataset.lsoa.index = proc.lsoa.index;
@@ -251,20 +225,19 @@
 				dataset.lad.data = proc.lad.data;
 				dataset.lad.index = proc.lad.index;
 
-				// TODO: use proper LAD breaks instead of the following hack
-				dataset.lad.data.forEach((d) => {
-					for (let i=0; i<4; i++) {
-                        if (d.perc <= breaks[i + 1]) {
-                            setColours(d, i);
-                            return;
-                        }
-                    }
-                    setColours(d, 4);
-				});
-
 				let ladVals = proc.lad.data.map(d => d.perc);
 				let ladChunks = ckmeans(ladVals, 5);
 				dataset.lad.breaks = getBreaks(ladChunks);
+
+				dataset.lad.data.forEach((d) => {
+					for (let i=0; i<4; i++) {
+                        if (d.perc <= dataset.lad.breaks[i + 1]) {
+                            setColours(d, i, colors);
+                            return;
+                        }
+                    }
+                    setColours(d, 4, colors);
+				});
 
 				dataset.ew.data = proc.ew.data;
 
@@ -523,66 +496,6 @@
 
 {#if mapLocation}
 <Map bind:map style={mapstyle} minzoom={4} maxzoom={14} bind:zoom={mapZoom} location={mapLocation}>
-	{#if selectData}
-		<MapSource
-			id="lsoa"
-			type="vector"
-			url={lsoabldg.url}
-			layer={lsoabldg.layer}
-			promoteId={lsoabldg.code}
-			maxzoom={13}>
-			<MapLayer
-				id="lsoa"
-				source="lsoa"
-				sourceLayer={lsoabldg.layer}
-				data={selectData}
-				type="fill"
-				paint={{
-					'fill-color': ['case',
-						['!=', ['feature-state', 'color'], null], ['feature-state', 'color'],
-						'rgba(255, 255, 255, 0)'
-					]
-				}}
-				order="tunnel_motorway_casing" />
-		</MapSource>
-		<MapSource
-			id="lsoa-bounds"
-			type="vector"
-			url={lsoabounds.url}
-			layer={lsoabounds.layer}
-			promoteId={lsoabounds.code}
-			minzoom={9}
-			maxzoom={12}>
-			<MapLayer
-				id="lsoa-fill"
-				source="lsoa-bounds"
-				sourceLayer={lsoabounds.layer}
-				type="fill"
-				paint={{ 'fill-color': 'rgba(255, 255, 255, 0)' }}
-				hover={true}
-				bind:hovered={active.lsoa.hovered}
-				click={true}
-				clickCenter={true}
-				bind:selected={active.lsoa.selected} />
-			<MapLayer
-				id="lsoa-bounds"
-				source="lsoa-bounds"
-				sourceLayer={lsoabounds.layer}
-				type="line"
-				paint={{
-					'line-color': ['case',
-						['==', ['feature-state', 'selected'], true], 'rgba(0, 0, 0, 1)',
-						['==', ['feature-state', 'hovered'], true], 'rgba(0, 0, 0, 1)',
-						'rgba(0, 0, 0, 0)'
-					],
-					'line-width': ['case',
-						['==', ['feature-state', 'selected'], true], 2,
-						['==', ['feature-state', 'hovered'], true], 2,
-						0
-					]
-				}} />
-		</MapSource>
-	{/if}
 	{#if ladbounds}
 		<MapSource
 			id="lad"
@@ -637,23 +550,10 @@
 		</MapSource>
 	{/if}
     <MapSource
-        id="lad2015line"
-        type="geojson"
-        data={lad2015feature}>
-        <MapLayer
-            id="lad2015line"
-            source="lad2015line"
-            type="line"
-            paint={{
-                'line-color': 'rgba(255, 0, 0, 0.9)'
-            }}
-             />
-    </MapSource>
-    <MapSource
         id="lad2015"
         type="geojson"
         data={lad2015feature}
-        props={{promoteId: "AREACD"}}>
+k        props={{promoteId: "AREACD"}}>
         <MapLayer
             bind:this={ladFillLayer}
             id="lad2015"
@@ -661,10 +561,19 @@
             type="fill"
             data={selectData}
             paint={{
+                'fill-opacity': .8,
                 'fill-color': ['case',
                     ['!=', ['feature-state', 'color'], null], ['feature-state', 'color'],
                     'rgba(255, 0, 0, 0.1)'
                 ]
+            }}
+             />
+        <MapLayer
+            id="lad2015line"
+            source="lad2015"
+            type="line"
+            paint={{
+                'line-color': 'rgba(255, 0, 0, 0.9)'
             }}
              />
     </MapSource>

@@ -61,23 +61,6 @@
 	console.log({options});
 	map.addLayer(options, order);
 
-	function updateData() {
-		if (id === "lad2015")
-		    return;
-
-		console.log('updating colours...');
-
-		data.lsoa.data.forEach(d => {
-			map.setFeatureState({
-				source: source,
-				sourceLayer: sourceLayer,
-				id: d.code
-			}, {
-				color: d.fill
-			});
-		});
-	}
-
 	function updateLadData() {
 		if (id !== "lad2015")
 		    return;
@@ -90,16 +73,15 @@
 			}, {
 				color: d.fill
 			});
-			console.log(map.getFeatureState({
-				source: source,
-				id: d.code
-			}));
-			console.log(d.code + " " + id + "!" + d.fill);
+			//console.log(map.getFeatureState({
+			//	source: source,
+			//	id: d.code
+			//}));
+			//console.log(d.code + " " + id + "!" + d.fill);
 		});
 	}
 
 	$: data && updateLadData();
-	$: data && updateData();
 	
 	$: if (click && selected != selectedPrev) {
 		if (selectedPrev) {

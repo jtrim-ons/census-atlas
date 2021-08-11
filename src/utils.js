@@ -4,7 +4,7 @@ import { csvParse, autoType } from 'd3-dsv';
 export async function getData(url) {
   let response = await fetch(url);
   let string = await response.text();
-	let data = await csvParse(string, autoType);
+  let data = await csvParse(string, autoType);
   return data;
 }
 
@@ -83,14 +83,9 @@ export function processData(data, lookup) {
 }
 
 export function getBreaks(chunks) {
-	let breaks = [];
-	
-	chunks.forEach(chunk => {
-		breaks.push(chunk[0]);
-	});
-
-	breaks.push(chunks[chunks.length - 1][chunks[chunks.length - 1].length - 1]);
-
+	let lastChunk = chunks[chunks.length - 1];
+	let breaks = chunks.map(chunk => chunk[0]);
+	breaks.push(lastChunk[lastChunk.length - 1]);
 	return breaks;
 }
 
@@ -107,3 +102,10 @@ export function getThresholds(domain, exp, count = 32) {
 	}
 	return breaks;
 }
+
+export function setColours(d, i, colours) {
+    d.color = colours.base[i];
+    d.muted = colours.muted[i];
+    d.fill = colours.base[i];
+};
+
