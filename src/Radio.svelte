@@ -18,6 +18,8 @@
 </style>
 
 <div>
-	<input type="radio" bind:group={selected} value={props} />
-	<span>{props.name}</span>
+	<label>
+	    <input type="radio" bind:group={selected} value={props} />
+	    {props.name}
+	</label>
 </div>

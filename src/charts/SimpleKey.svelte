@@ -8,12 +8,15 @@
 	import Marker from './Marker.svelte';
 	import AxisX from './AxisX.svelte';
 
+	export let data_;
 	export let breaks;
 	export let key = 'perc';
 
 	const xKey = ['x0', 'x1'];
 	const yKey = 'length';
 	const maskId = 'area-mask';
+
+	$: console.log({data_});
 
 	$: domain = [breaks[0], breaks[breaks.length - 1]];
 
@@ -27,7 +30,7 @@
 <style>
 	.chart-container {
 		width: 100%;
-		height: 50px;
+		height: 40px;
 	}
 	.input-container {
 		text-align: right;
@@ -44,7 +47,7 @@
 {#if scaleActive}
 <div class="chart-container">
 	<LayerCake
-		padding={{ top: 0, right: 0, bottom: 30, left: 0 }}
+		padding={{ top: 0, right: 0, bottom: 20, left: 0 }}
 		x={xKey}
 		xDomain={domain}
 		xScale={scaleActive}

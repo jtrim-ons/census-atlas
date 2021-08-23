@@ -2,6 +2,7 @@
 	import Radio from './Radio.svelte';
 
 	export let expanded = false;
+	export let expandAll = false;
 	export let props;
 	export let selected;
 
@@ -40,30 +41,33 @@
 		top: 3px;
 		left: 1.2em;
 	}
+	li.hidden {
+	    display: none;
+    }
 </style>
 
 {#if props.type == 'group-radio'}
-<span class:expanded on:click={toggle} style="padding-left: 2.3em">
+<span class:expanded="{expanded||expandAll}" on:click={toggle} style="padding-left: 2.3em">
 	<input type="radio" bind:group={selected} value={props} on:click={radioClick} />
 	{props.name}
 </span>
 {:else}
-<span class:expanded on:click={toggle}>
+<span class:expanded="{expanded||expandAll}" on:click={toggle}>
 	{props.name}
 </span>
 {/if}
 {#if props.code && props.type != 'group-radio'}<small>({props.code})</small>{/if}
 
-{#if expanded}
+{#if expanded || expandAll}
 	<ul>
 		{#each props.children as child}
-			<li>
-				{#if child.type === 'group' || child.type === 'group-radio'}
-					<svelte:self props={child} bind:selected={selected}/>
-				{:else}
-					<Radio props={child} bind:selected={selected}/>
-				{/if}
-			</li>
+            <li class:hidden={child.hidden}>
+                {#if child.type === 'group' || child.type === 'group-radio'}
+                    <svelte:self {expandAll} props={child} bind:selected={selected}/>
+                {:else}
+                    <Radio props={child} bind:selected={selected}/>
+                {/if}
+            </li>
 		{/each}
 	</ul>
 {/if}

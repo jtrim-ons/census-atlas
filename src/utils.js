@@ -17,7 +17,12 @@ export async function getTopo(url, layer) {
 export async function getNomis(url, code) {
   let response = await fetch(url);
   let string = await response.text();
+	let tmp = 0;
 	let data = csvParse(string, (d) => {
+		if (!tmp) {
+            console.log(d);
+            tmp = 1;
+        }
 		return {
 			code: d['GEOGRAPHY_CODE'],
 			value: +d[code],
@@ -28,12 +33,9 @@ export async function getNomis(url, code) {
   return data;
 }
 
-export function processData(data, lookup) {
-	let lsoa = {
-		index: {}
-	};
+export function processData(data) {
 	let lad = {
-		data: [],
+		data: data,
 		index: {}
 	};
 	let ew = {
@@ -42,41 +44,23 @@ export function processData(data, lookup) {
 			count: 0
 		}
 	};
-	let lad_temp = {};
 
 	data.forEach(d => {
-		lsoa.index[d.code] = d;
-
-		let parent = lookup[d.code].parent;
-		if (!lad.index[parent]) {
-			lad.index[parent] = {
-				code: parent,
-				value: d.value,
-				count: d.count
-			};
-			lad_temp[parent] = [d];
-		} else {
-			lad.index[parent].value += d.value;
-			lad.index[parent].count += d.count
-			lad_temp[parent].push(d);
-		}
+		lad.index[d.code] = d;
 	});
 
 	let keys = Object.keys(lad.index);
 	keys.forEach(key => {
-		lad.index[key].perc = (lad.index[key].value / lad.index[key].count) * 100;
-		lad.index[key].median = lad_temp[key][Math.floor(lad_temp[key].length / 2)];
-		lad.data.push(lad.index[key]);
+		lad.index[key].perc = lad.index[key].value / lad.index[key].count * 100;
 
 		ew.data.value += lad.index[key].value;
 		ew.data.count += lad.index[key].count;
 	});
 	lad.data.sort((a, b) => a.perc - b.perc);
 
-	ew.data.perc = (ew.data.value / ew.data.count) * 100;
+	ew.data.perc = ew.data.value / ew.data.count * 100;
 
 	return {
-		lsoa: lsoa,
 		lad: lad,
 		ew: ew
 	};
@@ -108,3 +92,24 @@ export function setColours(d, i, colours) {
     d.muted = colours.muted[i];
     d.fill = colours.base[i];
 };
+
+// Return true if and only if the pattern string is the target string
+// with some (or no) characters removed.  Case-insensitive
+export function textSearch(pattern, target) {
+  if (pattern.length === 0) {
+    return true;
+  }
+  let j=0;
+  let p = pattern[0].toUpperCase();
+  for (let i=0; i<target.length; i++) {
+    let t = target[i].toUpperCase();
+    if (p === t) {
+      ++j;
+      if (j === pattern.length) {
+        return true;
+      }
+      p = pattern[j].toUpperCase();
+    }  
+  }
+  return false;
+}
