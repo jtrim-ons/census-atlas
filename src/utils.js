@@ -93,23 +93,37 @@ export function setColours(d, i, colours) {
     d.fill = colours.base[i];
 };
 
-// Return true if and only if the pattern string is the target string
-// with some (or no) characters removed.  Case-insensitive
+// Return true if and only if the target string contains any
+// of the tokens in the pattern string.  Case-insensitive
 export function textSearch(pattern, target) {
   if (pattern.length === 0) {
     return true;
   }
-  let j=0;
-  let p = pattern[0].toUpperCase();
-  for (let i=0; i<target.length; i++) {
-    let t = target[i].toUpperCase();
-    if (p === t) {
-      ++j;
-      if (j === pattern.length) {
-        return true;
-      }
-      p = pattern[j].toUpperCase();
-    }  
+  for (let token of pattern.split(' ')) {
+    if (target.toUpperCase().includes(token.toUpperCase())) {
+      return true;
+    }
   }
   return false;
 }
+
+//// Return true if and only if the pattern string is the target string
+//// with some (or no) characters removed.  Case-insensitive
+//export function textSearch(pattern, target) {
+//  if (pattern.length === 0) {
+//    return true;
+//  }
+//  let j=0;
+//  let p = pattern[0].toUpperCase();
+//  for (let i=0; i<target.length; i++) {
+//    let t = target[i].toUpperCase();
+//    if (p === t) {
+//      ++j;
+//      if (j === pattern.length) {
+//        return true;
+//      }
+//      p = pattern[j].toUpperCase();
+//    }  
+//  }
+//  return false;
+//}

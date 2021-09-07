@@ -68,7 +68,7 @@
 
 <style>
 	div {
-		width: 60%;
+		width: calc(100% - 520px);
 		height: 100%;
 		position: fixed;
 		right: 0;

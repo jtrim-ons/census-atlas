@@ -7,7 +7,7 @@
 		box-sizing: border-box;
 		padding: 24px;
 		/* z-index: 2; */
-		width: 40%;
+		width: 520px;
 		position: absolute;
 	  transition: transform linear .4s;
 	}
