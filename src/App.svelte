@@ -394,6 +394,8 @@ function updateHiddenProps() {
 	    background: steelblue;
 	    color: white;
 	    border-radius: 12px;
+	    padding-left: 8px;
+	    padding-right: 8px;
     }
 	#infobox {
 		min-height: 160px;
@@ -489,7 +491,7 @@ function updateHiddenProps() {
 				on:select={() => active.lsoa.selected = null} />
 		{/if}
         <GroupBox>
-			<div><button on:click="{() => selectMode = false}">Cancel</button></div>
+			<div><button on:click="{() => selectMode = false}">← Go back</button></div>
             <div>
                 Select a table from the list below.  To narrow down the list, type part or all of a word in the search box.
             </div>
@@ -499,7 +501,6 @@ function updateHiddenProps() {
             <Group
                 props={{ name: '2011 Census Tables', isRoot: true, children: indicators.slice(0, 8) }}
                 bind:selected={selectTable}
-                onselect={() => {selectMode = false}}
                 searchstring={indicatorSearchString}
                 expanded
                 {expandAll} />

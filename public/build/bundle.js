@@ -804,8 +804,8 @@ var app = (function () {
     		c: function create() {
     			div = element("div");
     			if (default_slot) default_slot.c();
-    			attr_dev(div, "class", "svelte-zaqi43");
-    			add_location(div, file$1, 26, 0, 394);
+    			attr_dev(div, "class", "svelte-1kqrgfj");
+    			add_location(div, file$1, 26, 0, 388);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -95600,7 +95600,7 @@ var app = (function () {
     const { console: console_1$4 } = globals;
     const file$h = "src/App.svelte";
 
-    // (424:0) {#if loading}
+    // (426:0) {#if loading}
     function create_if_block_6(ctx) {
     	let loader;
     	let current;
@@ -95641,14 +95641,14 @@ var app = (function () {
     		block,
     		id: create_if_block_6.name,
     		type: "if",
-    		source: "(424:0) {#if loading}",
+    		source: "(426:0) {#if loading}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (434:1) {#if indicators && selectItem}
+    // (436:1) {#if indicators && selectItem}
     function create_if_block_2$3(ctx) {
     	let div3;
     	let div0;
@@ -95746,20 +95746,20 @@ var app = (function () {
     			t15 = space();
     			create_component(groupbox.$$.fragment);
     			set_style(b, "font-size", "2em");
-    			add_location(b, file$h, 436, 16, 11859);
-    			add_location(small, file$h, 436, 71, 11914);
-    			attr_dev(button, "class", "svelte-ijae0s");
-    			add_location(button, file$h, 437, 16, 11971);
-    			attr_dev(div0, "class", "svelte-ijae0s");
-    			add_location(div0, file$h, 435, 3, 11837);
-    			attr_dev(div1, "class", "svelte-ijae0s");
-    			add_location(div1, file$h, 439, 3, 12047);
-    			add_location(br, file$h, 449, 3, 12469);
-    			attr_dev(div2, "class", "grid svelte-ijae0s");
-    			add_location(div2, file$h, 453, 3, 12563);
+    			add_location(b, file$h, 438, 16, 11908);
+    			add_location(small, file$h, 438, 71, 11963);
+    			attr_dev(button, "class", "svelte-1xe6wg7");
+    			add_location(button, file$h, 439, 16, 12020);
+    			attr_dev(div0, "class", "svelte-1xe6wg7");
+    			add_location(div0, file$h, 437, 3, 11886);
+    			attr_dev(div1, "class", "svelte-1xe6wg7");
+    			add_location(div1, file$h, 441, 3, 12096);
+    			add_location(br, file$h, 451, 3, 12518);
+    			attr_dev(div2, "class", "grid svelte-1xe6wg7");
+    			add_location(div2, file$h, 455, 3, 12612);
     			attr_dev(div3, "id", "infobox");
-    			attr_dev(div3, "class", "svelte-ijae0s");
-    			add_location(div3, file$h, 434, 2, 11815);
+    			attr_dev(div3, "class", "svelte-1xe6wg7");
+    			add_location(div3, file$h, 436, 2, 11864);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div3, anchor);
@@ -95854,7 +95854,7 @@ var app = (function () {
 
     			const groupbox_changes = {};
 
-    			if (dirty[0] & /*indicators, selectMode, indicatorSearchString, expandAll, selectTable*/ 488 | dirty[1] & /*$$scope*/ 8192) {
+    			if (dirty[0] & /*indicators, indicatorSearchString, expandAll, selectTable, selectMode*/ 488 | dirty[1] & /*$$scope*/ 4096) {
     				groupbox_changes.$$scope = { dirty, ctx };
     			}
 
@@ -95890,14 +95890,14 @@ var app = (function () {
     		block,
     		id: create_if_block_2$3.name,
     		type: "if",
-    		source: "(434:1) {#if indicators && selectItem}",
+    		source: "(436:1) {#if indicators && selectItem}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (455:4) {#if selectData}
+    // (457:4) {#if selectData}
     function create_if_block_4$2(ctx) {
     	let div0;
     	let hr;
@@ -95950,18 +95950,18 @@ var app = (function () {
     			div1 = element("div");
     			if (if_block) if_block.c();
     			set_style(hr, "border-top-color", "#871A5B");
-    			attr_dev(hr, "class", "svelte-ijae0s");
-    			add_location(hr, file$h, 456, 6, 12620);
-    			add_location(strong0, file$h, 457, 6, 12667);
-    			add_location(br0, file$h, 457, 38, 12699);
-    			attr_dev(strong1, "class", "text-lrg svelte-ijae0s");
-    			add_location(strong1, file$h, 458, 6, 12712);
-    			add_location(br1, file$h, 459, 70, 12790);
-    			add_location(small, file$h, 460, 6, 12803);
-    			attr_dev(div0, "class", "svelte-ijae0s");
-    			add_location(div0, file$h, 455, 5, 12608);
-    			attr_dev(div1, "class", "svelte-ijae0s");
-    			add_location(div1, file$h, 465, 20, 12995);
+    			attr_dev(hr, "class", "svelte-1xe6wg7");
+    			add_location(hr, file$h, 458, 6, 12669);
+    			add_location(strong0, file$h, 459, 6, 12716);
+    			add_location(br0, file$h, 459, 38, 12748);
+    			attr_dev(strong1, "class", "text-lrg svelte-1xe6wg7");
+    			add_location(strong1, file$h, 460, 6, 12761);
+    			add_location(br1, file$h, 461, 70, 12839);
+    			add_location(small, file$h, 462, 6, 12852);
+    			attr_dev(div0, "class", "svelte-1xe6wg7");
+    			add_location(div0, file$h, 457, 5, 12657);
+    			attr_dev(div1, "class", "svelte-1xe6wg7");
+    			add_location(div1, file$h, 467, 20, 13044);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div0, anchor);
@@ -96017,14 +96017,14 @@ var app = (function () {
     		block,
     		id: create_if_block_4$2.name,
     		type: "if",
-    		source: "(455:4) {#if selectData}",
+    		source: "(457:4) {#if selectData}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (467:24) {#if active.lad.hovered || active.lad.highlighted || active.lad.selected}
+    // (469:24) {#if active.lad.hovered || active.lad.highlighted || active.lad.selected}
     function create_if_block_5(ctx) {
     	let hr;
     	let t0;
@@ -96095,14 +96095,14 @@ var app = (function () {
     			t10 = text(t10_value);
     			t11 = text("s");
     			set_style(hr, "border-top-color", "#F39431");
-    			attr_dev(hr, "class", "svelte-ijae0s");
-    			add_location(hr, file$h, 467, 7, 13106);
-    			add_location(strong0, file$h, 468, 7, 13154);
-    			add_location(br0, file$h, 468, 185, 13332);
-    			attr_dev(strong1, "class", "text-lrg svelte-ijae0s");
-    			add_location(strong1, file$h, 469, 7, 13346);
-    			add_location(br1, file$h, 471, 16, 13625);
-    			add_location(small, file$h, 472, 7, 13639);
+    			attr_dev(hr, "class", "svelte-1xe6wg7");
+    			add_location(hr, file$h, 469, 7, 13155);
+    			add_location(strong0, file$h, 470, 7, 13203);
+    			add_location(br0, file$h, 470, 185, 13381);
+    			attr_dev(strong1, "class", "text-lrg svelte-1xe6wg7");
+    			add_location(strong1, file$h, 471, 7, 13395);
+    			add_location(br1, file$h, 473, 16, 13674);
+    			add_location(small, file$h, 474, 7, 13688);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, hr, anchor);
@@ -96168,14 +96168,14 @@ var app = (function () {
     		block,
     		id: create_if_block_5.name,
     		type: "if",
-    		source: "(467:24) {#if active.lad.hovered || active.lad.highlighted || active.lad.selected}",
+    		source: "(469:24) {#if active.lad.hovered || active.lad.highlighted || active.lad.selected}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (483:2) {#if ladlist}
+    // (485:2) {#if ladlist}
     function create_if_block_3$3(ctx) {
     	let select;
     	let updating_selected;
@@ -96237,14 +96237,14 @@ var app = (function () {
     		block,
     		id: create_if_block_3$3.name,
     		type: "if",
-    		source: "(483:2) {#if ladlist}",
+    		source: "(485:2) {#if ladlist}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (491:8) <GroupBox>
+    // (493:8) <GroupBox>
     function create_default_slot_4(ctx) {
     	let div0;
     	let button;
@@ -96261,7 +96261,7 @@ var app = (function () {
     	let dispose;
 
     	function group_selected_binding_1(value) {
-    		/*group_selected_binding_1*/ ctx[28].call(null, value);
+    		/*group_selected_binding_1*/ ctx[27].call(null, value);
     	}
 
     	let group_props = {
@@ -96270,7 +96270,6 @@ var app = (function () {
     			isRoot: true,
     			children: /*indicators*/ ctx[5].slice(0, 8)
     		},
-    		onselect: /*func*/ ctx[27],
     		searchstring: /*indicatorSearchString*/ ctx[7],
     		expanded: true,
     		expandAll: /*expandAll*/ ctx[8]
@@ -96287,7 +96286,7 @@ var app = (function () {
     		c: function create() {
     			div0 = element("div");
     			button = element("button");
-    			button.textContent = "Cancel";
+    			button.textContent = "← Go back";
     			t1 = space();
     			div1 = element("div");
     			div1.textContent = "Select a table from the list below.  To narrow down the list, type part or all of a word in the search box.";
@@ -96296,16 +96295,16 @@ var app = (function () {
     			input = element("input");
     			t4 = space();
     			create_component(group.$$.fragment);
-    			attr_dev(button, "class", "svelte-ijae0s");
-    			add_location(button, file$h, 491, 8, 14531);
-    			attr_dev(div0, "class", "svelte-ijae0s");
-    			add_location(div0, file$h, 491, 3, 14526);
-    			attr_dev(div1, "class", "svelte-ijae0s");
-    			add_location(div1, file$h, 492, 12, 14611);
+    			attr_dev(button, "class", "svelte-1xe6wg7");
+    			add_location(button, file$h, 493, 8, 14580);
+    			attr_dev(div0, "class", "svelte-1xe6wg7");
+    			add_location(div0, file$h, 493, 3, 14575);
+    			attr_dev(div1, "class", "svelte-1xe6wg7");
+    			add_location(div1, file$h, 494, 12, 14663);
     			attr_dev(input, "placeholder", "Search variables");
-    			add_location(input, file$h, 496, 16, 14794);
-    			attr_dev(div2, "class", "svelte-ijae0s");
-    			add_location(div2, file$h, 495, 12, 14772);
+    			add_location(input, file$h, 498, 16, 14846);
+    			attr_dev(div2, "class", "svelte-1xe6wg7");
+    			add_location(div2, file$h, 497, 12, 14824);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div0, anchor);
@@ -96343,7 +96342,6 @@ var app = (function () {
     				children: /*indicators*/ ctx[5].slice(0, 8)
     			};
 
-    			if (dirty[0] & /*selectMode*/ 64) group_changes.onselect = /*func*/ ctx[27];
     			if (dirty[0] & /*indicatorSearchString*/ 128) group_changes.searchstring = /*indicatorSearchString*/ ctx[7];
     			if (dirty[0] & /*expandAll*/ 256) group_changes.expandAll = /*expandAll*/ ctx[8];
 
@@ -96381,14 +96379,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_4.name,
     		type: "slot",
-    		source: "(491:8) <GroupBox>",
+    		source: "(493:8) <GroupBox>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (432:0) <Panel {selectMode}>
+    // (434:0) <Panel {selectMode}>
     function create_default_slot_3(ctx) {
     	let h1;
     	let t1;
@@ -96403,8 +96401,8 @@ var app = (function () {
     			t1 = space();
     			if (if_block) if_block.c();
     			if_block_anchor = empty();
-    			attr_dev(h1, "class", "svelte-ijae0s");
-    			add_location(h1, file$h, 432, 1, 11754);
+    			attr_dev(h1, "class", "svelte-1xe6wg7");
+    			add_location(h1, file$h, 434, 1, 11803);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, h1, anchor);
@@ -96458,14 +96456,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_3.name,
     		type: "slot",
-    		source: "(432:0) <Panel {selectMode}>",
+    		source: "(434:0) <Panel {selectMode}>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (510:0) {#if mapLocation}
+    // (511:0) {#if mapLocation}
     function create_if_block$9(ctx) {
     	let map_1;
     	let updating_map;
@@ -96475,11 +96473,11 @@ var app = (function () {
     	let current;
 
     	function map_1_map_binding(value) {
-    		/*map_1_map_binding*/ ctx[31].call(null, value);
+    		/*map_1_map_binding*/ ctx[30].call(null, value);
     	}
 
     	function map_1_zoom_binding(value) {
-    		/*map_1_zoom_binding*/ ctx[32].call(null, value);
+    		/*map_1_zoom_binding*/ ctx[31].call(null, value);
     	}
 
     	let map_1_props = {
@@ -96527,7 +96525,7 @@ var app = (function () {
     			const map_1_changes = {};
     			if (dirty[0] & /*mapLocation*/ 4) map_1_changes.location = /*mapLocation*/ ctx[2];
 
-    			if (dirty[0] & /*active, selectData*/ 4098 | dirty[1] & /*$$scope*/ 8192) {
+    			if (dirty[0] & /*active, selectData*/ 4098 | dirty[1] & /*$$scope*/ 4096) {
     				map_1_changes.$$scope = { dirty, ctx };
     			}
 
@@ -96546,7 +96544,7 @@ var app = (function () {
     			map_1.$set(map_1_changes);
     			const keybox_changes = {};
 
-    			if (dirty[0] & /*selectData*/ 4096 | dirty[1] & /*$$scope*/ 8192) {
+    			if (dirty[0] & /*selectData*/ 4096 | dirty[1] & /*$$scope*/ 4096) {
     				keybox_changes.$$scope = { dirty, ctx };
     			}
 
@@ -96574,14 +96572,14 @@ var app = (function () {
     		block,
     		id: create_if_block$9.name,
     		type: "if",
-    		source: "(510:0) {#if mapLocation}",
+    		source: "(511:0) {#if mapLocation}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (512:4) <MapSource         id="lad2015"         type="geojson"         data={lad2015feature}         promoteId={"AREACD"}>
+    // (513:4) <MapSource         id="lad2015"         type="geojson"         data={lad2015feature}         promoteId={"AREACD"}>
     function create_default_slot_2(ctx) {
     	let maplayer0;
     	let updating_hovered;
@@ -96593,11 +96591,11 @@ var app = (function () {
     	let current;
 
     	function maplayer0_hovered_binding(value) {
-    		/*maplayer0_hovered_binding*/ ctx[29].call(null, value);
+    		/*maplayer0_hovered_binding*/ ctx[28].call(null, value);
     	}
 
     	function maplayer0_selected_binding(value) {
-    		/*maplayer0_selected_binding*/ ctx[30].call(null, value);
+    		/*maplayer0_selected_binding*/ ctx[29].call(null, value);
     	}
 
     	let maplayer0_props = {
@@ -96744,14 +96742,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_2.name,
     		type: "slot",
-    		source: "(512:4) <MapSource         id=\\\"lad2015\\\"         type=\\\"geojson\\\"         data={lad2015feature}         promoteId={\\\"AREACD\\\"}>",
+    		source: "(513:4) <MapSource         id=\\\"lad2015\\\"         type=\\\"geojson\\\"         data={lad2015feature}         promoteId={\\\"AREACD\\\"}>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (511:0) <Map bind:map style={mapstyle} minzoom={4} maxzoom={14} bind:zoom={mapZoom} location={mapLocation}>
+    // (512:0) <Map bind:map style={mapstyle} minzoom={4} maxzoom={14} bind:zoom={mapZoom} location={mapLocation}>
     function create_default_slot_1$2(ctx) {
     	let mapsource;
     	let current;
@@ -96779,7 +96777,7 @@ var app = (function () {
     		p: function update(ctx, dirty) {
     			const mapsource_changes = {};
 
-    			if (dirty[0] & /*active, selectData*/ 4098 | dirty[1] & /*$$scope*/ 8192) {
+    			if (dirty[0] & /*active, selectData*/ 4098 | dirty[1] & /*$$scope*/ 4096) {
     				mapsource_changes.$$scope = { dirty, ctx };
     			}
 
@@ -96803,21 +96801,21 @@ var app = (function () {
     		block,
     		id: create_default_slot_1$2.name,
     		type: "slot",
-    		source: "(511:0) <Map bind:map style={mapstyle} minzoom={4} maxzoom={14} bind:zoom={mapZoom} location={mapLocation}>",
+    		source: "(512:0) <Map bind:map style={mapstyle} minzoom={4} maxzoom={14} bind:zoom={mapZoom} location={mapLocation}>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (569:4) {#if selectData}
+    // (570:4) {#if selectData}
     function create_if_block_1$4(ctx) {
     	let simplekey;
     	let current;
 
     	simplekey = new SimpleKey({
     			props: {
-    				data_: /*selectData*/ ctx[12].lad.data.map(func_1),
+    				data_: /*selectData*/ ctx[12].lad.data.map(func),
     				breaks: /*selectData*/ ctx[12].lad.breaks,
     				key: "perc"
     			},
@@ -96834,7 +96832,7 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const simplekey_changes = {};
-    			if (dirty[0] & /*selectData*/ 4096) simplekey_changes.data_ = /*selectData*/ ctx[12].lad.data.map(func_1);
+    			if (dirty[0] & /*selectData*/ 4096) simplekey_changes.data_ = /*selectData*/ ctx[12].lad.data.map(func);
     			if (dirty[0] & /*selectData*/ 4096) simplekey_changes.breaks = /*selectData*/ ctx[12].lad.breaks;
     			simplekey.$set(simplekey_changes);
     		},
@@ -96856,14 +96854,14 @@ var app = (function () {
     		block,
     		id: create_if_block_1$4.name,
     		type: "if",
-    		source: "(569:4) {#if selectData}",
+    		source: "(570:4) {#if selectData}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (568:0) <KeyBox>
+    // (569:0) <KeyBox>
     function create_default_slot$2(ctx) {
     	let if_block_anchor;
     	let current;
@@ -96922,7 +96920,7 @@ var app = (function () {
     		block,
     		id: create_default_slot$2.name,
     		type: "slot",
-    		source: "(568:0) <KeyBox>",
+    		source: "(569:0) <KeyBox>",
     		ctx
     	});
 
@@ -96994,7 +96992,7 @@ var app = (function () {
     			const panel_changes = {};
     			if (dirty[0] & /*selectMode*/ 64) panel_changes.selectMode = /*selectMode*/ ctx[6];
 
-    			if (dirty[0] & /*indicators, selectMode, indicatorSearchString, expandAll, selectTable, ladlist, active, selectItem, selectData, ladlookup, selectMeta*/ 8186 | dirty[1] & /*$$scope*/ 8192) {
+    			if (dirty[0] & /*indicators, indicatorSearchString, expandAll, selectTable, selectMode, ladlist, active, selectItem, selectData, ladlookup, selectMeta*/ 8186 | dirty[1] & /*$$scope*/ 4096) {
     				panel_changes.$$scope = { dirty, ctx };
     			}
 
@@ -97064,7 +97062,7 @@ var app = (function () {
     const mapstyle = "https://bothness.github.io/ons-basemaps/data/style-omt.json";
     const tabledata = "https://bothness.github.io/census-atlas/data/indicators.json";
     const lsoadata = "https://bothness.github.io/census-atlas/data/lsoa2011_lad2020.csv";
-    const func_1 = d => d.perc;
+    const func = d => d.perc;
 
     function instance$j($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
@@ -97427,10 +97425,6 @@ var app = (function () {
     		$$invalidate(7, indicatorSearchString);
     	}
 
-    	const func = () => {
-    		$$invalidate(6, selectMode = false);
-    	};
-
     	function group_selected_binding_1(value) {
     		selectTable = value;
     		$$invalidate(3, selectTable);
@@ -97641,7 +97635,6 @@ var app = (function () {
     		select_handler,
     		click_handler_1,
     		input_input_handler,
-    		func,
     		group_selected_binding_1,
     		maplayer0_hovered_binding,
     		maplayer0_selected_binding,

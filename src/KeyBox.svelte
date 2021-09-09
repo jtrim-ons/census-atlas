@@ -5,8 +5,8 @@
 		z-index: 2;
 		width: 320px;
 		position: absolute;
-	    right: 12px;
-	    bottom: 24px;
+	    left: 536px;
+		top: 16px;
 	    background: white;
 	    box-shadow: 6px 0 5px 0 rgba(80, 80, 80, 0.2);
 	    border-radius: 4px;
