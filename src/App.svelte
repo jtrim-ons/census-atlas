@@ -4,6 +4,7 @@
 	import { bbox } from "@turf/turf";
 	import { ckmeans } from 'simple-statistics';
 	import Panel from "./Panel.svelte";
+	import PanelShadowHack from "./PanelShadowHack.svelte";
 	import KeyBox from "./KeyBox.svelte";
 	import Group from "./Group.svelte";
 	import GroupBox from "./GroupBox.svelte";
@@ -14,9 +15,11 @@
 	import SimpleKey from "./charts/SimpleKey.svelte";
 	import Loader from "./ui/Loader.svelte";
 	import Select from "./ui/Select.svelte";
-	import { getData, getNomis, getBreaks, getTopo, processData, setColours, textSearch, addInfoToIndicators } from "./utils.js";
+	import { getData, getNomis, getAges, getBreaks, getTopo, processData, setColours, textSearch, addInfoToIndicators } from "./utils.js";
 	import { updateURL, replaceURL } from "./urlUtils.js";
 	import colors from './colors.js';
+	import all_ages from './all_ages.csv';
+	console.log({all_ages});
 
 	import lad2015topo from "./geogLA2015EW.json";
 	let lad2015feature = feature(lad2015topo, lad2015topo.objects.LAD15merc);
@@ -91,6 +94,9 @@
 
 	let mapLoaded = false;
 	let mapZoom = null;
+	
+	let minAge;
+	let maxAge;
 
 	setIndicator(indicators, selectCode);
 	if (!selectTable) {
@@ -197,7 +203,7 @@
 	function loadData() {
 		console.log("loading data...");
 		loading = true;
-		if (data[selectItem.code]) {
+		if (selectItem.parent.code !== "QS103EW" && data[selectItem.code]) {
 			selectData = data[selectItem.code];
 			console.log("data loaded from memory!");
 			if (active.lad.selected) {
@@ -209,9 +215,13 @@
 			console.log(`${apiurl}${selectMeta.table.nomis}${selectMeta.cell}&geography=${geography}&uid=${apikey}`);
 			let ladUrl = `${apiurl}${selectMeta.table.nomis}${selectMeta.cell}&geography=${ladGeography}&uid=${apikey}`;
 			let url = `https://bothness.github.io/census-atlas/data/lsoa/${selectMeta.code}.csv`;
+			console.log({table: selectMeta.table});
 			console.log(url);
 			///////getNomis(url, selectMeta.cell).then((res) => {
-			getNomis(ladUrl, selectMeta.cell).then((res) => {
+			(selectMeta.table.code === "QS103EW" ? 
+                getAges(all_ages, minAge, maxAge) :
+                getNomis(ladUrl, selectMeta.cell)
+            ).then((res) => {
 			    console.log({xyz: res[0]});
 				let dataset = {
 					lad: {},
@@ -325,6 +335,8 @@
         if (p == null) selectItem = selectTable.children[0];
     }
 	$: selectItem && setSelect(); // Update meta when selection updates
+	$: minAge && loadData(); // Update map when minAge updates
+	$: maxAge && loadData(); // Update map when maxAge updates
 	$: active.lad.highlighted = lsoalookup && active.lsoa.hovered ? lsoalookup[active.lsoa.hovered].parent : null;
 	$: active.lad.selected = lsoalookup && active.lsoa.selected ? lsoalookup[active.lsoa.selected].parent : active.lad.selected;
 	$: (data[selectCode] && (active.lad.selected || active.lad.selected == null)) && doSelect();
@@ -440,11 +452,14 @@ function updateHiddenProps() {
                 <button on:click="{() => selectMode = true}">Change ➞</button>
 			</div>
 			<div>
-			    The map shows, for each district in England and Wales, the percentage of {selectItem.unit.toLowerCase()}s in the selected category:
+			    The map shows, for each district in England and Wales, the percentage of {selectItem.unit.toLowerCase()}s in the selected
+			    {selectItem.parent.code === "QS103EW" ? "age range" : "category"}:
 			</div>
             <Group
                 props={{name: 'abc', isRoot: true, children: selectTable && selectTable.children || []}}
                 bind:selected={selectItem}
+                bind:minAge={minAge}
+                bind:maxAge={maxAge}
                 searchstring={""}
                 expanded
                 expandAll={false} />
@@ -566,6 +581,7 @@ function updateHiddenProps() {
              />
     </MapSource>
 </Map>
+<PanelShadowHack/>
 <KeyBox>
     {#if selectData}
         <SimpleKey

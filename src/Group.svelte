@@ -6,6 +6,8 @@
 	export let props;
 	export let selected;
 	export let onselect = () => {};
+	export let minAge = 30;
+	export let maxAge = 40;
 
 	function toggle() {
 		expanded = !expanded;
@@ -48,7 +50,7 @@
 	li {
 		padding: 0.2em 0;
 	}
-	input {
+	input.radio-input {
 		position: absolute;
 		top: 3px;
 		left: 1.2em;
@@ -58,28 +60,41 @@
     }
 </style>
 
-{#if props.type == 'group-radio'}
-<span class:expanded="{expanded||expandAll}" on:click={toggle} style="padding-left: 2.3em">
-	<input type="radio" bind:group={selected} value={props} on:click={radioClick} />
-	{props.name}
-</span>
-{:else if !props.isRoot}
-<span class:accordion="{props.depth==0}" class:expanded="{expanded||expandAll}" on:click={toggle}>
-	{props.name}
-</span>
-{/if}
-{#if props.code && props.type != 'group-radio'}<small>({props.code})</small>{/if}
+{#if props.isRoot && props.children[0].depth == 2 && props.children[0].parent.code === "QS103EW"}
+    <label>
+        Minimum age
+        <input type=number bind:value={minAge} min=0 max=100 style="width: 70px;">
+        <input type=range bind:value={minAge} min=0 max=100 style="width: 160px; vertical-align: middle">
+    </label>
+    <label>
+        Maximum age
+        <input type=number bind:value={maxAge} min=0 max=100 style="width: 70px;">
+        <input type=range bind:value={maxAge} min=0 max=100 style="width: 160px; vertical-align: middle">
+    </label>
+{:else}
+    {#if props.type == 'group-radio'}
+    <span class:expanded="{expanded||expandAll}" on:click={toggle} style="padding-left: 2.3em">
+        <input class="radio-input" type="radio" bind:group={selected} value={props} on:click={radioClick} />
+        {props.name}
+    </span>
+    {:else if !props.isRoot}
+    <span class:accordion="{props.depth==0}" class:expanded="{expanded||expandAll}" on:click={toggle}>
+        {props.name}
+    </span>
+    {/if}
+    {#if props.code && props.type != 'group-radio'}<small>({props.code})</small>{/if}
 
-{#if expanded || expandAll}
-	<ul class:no-left-border={props.isRoot}>
-		{#each props.children as child}
-            <li class:hidden={child.hidden}>
-                {#if child.depth != 1 && (child.type === 'group' || child.type === 'group-radio')}
-                    <svelte:self {onselect} {expandAll} props={child} bind:selected={selected}/>
-                {:else}
-                    <Radio {onselect} props={child} bind:selected={selected}/>
-                {/if}
-            </li>
-		{/each}
-	</ul>
+    {#if expanded || expandAll}
+        <ul class:no-left-border={props.isRoot}>
+            {#each props.children as child}
+                <li class:hidden={child.hidden}>
+                    {#if child.depth != 1 && (child.type === 'group' || child.type === 'group-radio')}
+                        <svelte:self {onselect} {expandAll} props={child} bind:selected={selected}/>
+                    {:else}
+                        <Radio {onselect} props={child} bind:selected={selected}/>
+                    {/if}
+                </li>
+            {/each}
+        </ul>
+    {/if}
 {/if}

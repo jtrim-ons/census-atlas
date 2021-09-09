@@ -1,5 +1,6 @@
 import svelte from 'rollup-plugin-svelte';
 import json from '@rollup/plugin-json';
+import dsv from '@rollup/plugin-dsv';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 import livereload from 'rollup-plugin-livereload';
@@ -45,6 +46,7 @@ export default {
 			}
 		}),
 		json(),
+		dsv(),
 		// we'll extract any component CSS out into
 		// a separate file - better for performance
 		css({ output: 'bundle.css' }),

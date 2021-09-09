@@ -33,6 +33,21 @@ export async function getNomis(url, code) {
   return data;
 }
 
+export async function getAges(all_ages, minAge, maxAge) {
+    return all_ages.map(d => {
+		let c = 0;
+		for (let i=minAge; i<=maxAge; i++) {
+		    c += +d[i + 1];
+        }
+		return {
+			code: d['GEOGRAPHY_CODE'],
+			value: c,
+			count: +d['0'],
+			perc: (c / +d['0']) * 100
+		};
+	});
+}
+
 export function processData(data) {
 	let lad = {
 		data: data,
