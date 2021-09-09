@@ -14,12 +14,16 @@
 	import SimpleKey from "./charts/SimpleKey.svelte";
 	import Loader from "./ui/Loader.svelte";
 	import Select from "./ui/Select.svelte";
-	import { getData, getNomis, getBreaks, getTopo, processData, setColours, textSearch } from "./utils.js";
+	import { getData, getNomis, getBreaks, getTopo, processData, setColours, textSearch, addInfoToIndicators } from "./utils.js";
 	import { updateURL, replaceURL } from "./urlUtils.js";
 	import colors from './colors.js';
 
 	import lad2015topo from "./geogLA2015EW.json";
 	let lad2015feature = feature(lad2015topo, lad2015topo.objects.LAD15merc);
+
+	import indicators_ from './indicators.json';
+	let indicators = indicators_;
+	indicators.forEach(item => addInfoToIndicators(item, 0, null));
 
 	let selectMode = false;
 	let indicatorSearchString = "";
@@ -49,7 +53,7 @@
 	let map = null;
 
 	// DATA
-	let indicators;
+//	let indicators;
 	let ladbounds;
 	let ladlookup;
 	let ladlist;
@@ -72,7 +76,14 @@
 	// STATE
 	let selectCode = "QS119EW005";
 	let mapLocation = null;
+    // TODO: remove the following (the default mapLocation should be set somewhere else)
+    mapLocation = {
+        zoom: 5,
+        lon: 2,
+        lat: 58
+    };
 
+	let selectTable;
 	let selectItem;
 	let selectMeta;
 	let selectData;
@@ -80,6 +91,11 @@
 
 	let mapLoaded = false;
 	let mapZoom = null;
+
+	setIndicator(indicators, selectCode);
+	if (!selectTable) {
+		selectTable = indicators[0].children[0];
+	}
 
 	// FUNCTIONS
 	function setIndicator(indicators, code) {
@@ -153,25 +169,12 @@
 						});
 
 						lsoalookup = lookup;
-
-						fetch(tabledata)
-							.then((res) => res.json())
-							.then((json) => {
-								indicators = json;
-
-								setIndicator(indicators, selectCode);
-
-								if (!selectItem) {
-									selectItem = indicators[0].children[0].children[0];
-								}
-							});
 					});
 			});
 	}
 
 	function setSelect() {
 		if (!(selectMeta && selectItem && selectMeta.code == selectItem.code)) {
-            selectMode = false;
 			let code = selectItem.code;
 			let group = indicators.find((d) => d.code == code.slice(0, 3));
 			let table = group.children.find((d) => d.code == code.slice(0, 7));
@@ -316,6 +319,11 @@
 		}
 	}
 
+	$: if (selectTable) { // If selected item isn't in selected table, then select the first item in the table
+        let p = selectItem.parent;
+        while (p != null && p != selectTable) p = p.parent;
+        if (p == null) selectItem = selectTable.children[0];
+    }
 	$: selectItem && setSelect(); // Update meta when selection updates
 	$: active.lad.highlighted = lsoalookup && active.lsoa.hovered ? lsoalookup[active.lsoa.hovered].parent : null;
 	$: active.lad.selected = lsoalookup && active.lsoa.selected ? lsoalookup[active.lsoa.selected].parent : active.lad.selected;
@@ -350,8 +358,10 @@ function updateHiddenProps() {
                 found = helper(child, found0) || found;
             }
         }
-        if (found) ++numberOfFinds;
-        prop.hidden = !found;
+        if (prop.depth < 2) {
+            if (found) ++numberOfFinds;
+            prop.hidden = !found;
+        }
         return found;
     }
     for (let prop of indicators) {
@@ -383,6 +393,7 @@ function updateHiddenProps() {
 	button {
 	    background: steelblue;
 	    color: white;
+	    border-radius: 12px;
     }
 	#infobox {
 		min-height: 160px;
@@ -423,17 +434,23 @@ function updateHiddenProps() {
 	{#if indicators && selectItem}
 		<div id="infobox">
 			<div>
-			    The map shows, for each district in England and Wales, the percentage of people in the following category:
+                <b style="font-size: 2em;">{selectMeta.table.name}</b> <small>({selectMeta.table.code})</small>
+                <button on:click="{() => selectMode = true}">Change ➞</button>
 			</div>
 			<div>
+			    The map shows, for each district in England and Wales, the percentage of {selectItem.unit.toLowerCase()}s in the selected category:
+			</div>
+            <Group
+                props={{name: 'abc', isRoot: true, children: selectTable && selectTable.children || []}}
+                bind:selected={selectItem}
+                searchstring={""}
+                expanded
+                expandAll={false} />
+
+			<br>
+			<!--<div>
 			    <strong class="text-med">{selectItem.name}</strong>
-			</div>
-			<div>
-                The data is from this table: {selectMeta.table.name} <small>({selectMeta.table.code})</small>
-			</div>
-			<div>
-                <button on:click="{() => selectMode = true}">Select a different table or category ➞</button>
-            </div>
+			</div> -->
 			<div class="grid">
 				{#if selectData}
 					<div>
@@ -474,11 +491,15 @@ function updateHiddenProps() {
         <GroupBox>
 			<div><button on:click="{() => selectMode = false}">Cancel</button></div>
             <div>
+                Select a table from the list below.  To narrow down the list, type part or all of a word in the search box.
+            </div>
+            <div>
                 <input bind:value={indicatorSearchString} on:keyup={updateHiddenProps} placeholder="Search variables">
             </div>
             <Group
-                props={{ name: '2011 Census Tables', children: indicators.slice(0, 8) }}
-                bind:selected={selectItem}
+                props={{ name: '2011 Census Tables', isRoot: true, children: indicators.slice(0, 8) }}
+                bind:selected={selectTable}
+                onselect={() => {selectMode = false}}
                 searchstring={indicatorSearchString}
                 expanded
                 {expandAll} />

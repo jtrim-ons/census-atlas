@@ -93,6 +93,15 @@ export function setColours(d, i, colours) {
     d.fill = colours.base[i];
 };
 
+// recursively add depth and parent fields to indicators
+export function addInfoToIndicators(item, depth, parent) {
+    item.depth = depth;
+    item.parent = parent;
+    if ("children" in item) {
+        item.children.forEach(child => addInfoToIndicators(child, depth + 1, item));
+    }
+}
+
 // Return true if and only if the target string contains any
 // of the tokens in the pattern string.  Case-insensitive
 export function textSearch(pattern, target) {

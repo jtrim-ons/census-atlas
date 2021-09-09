@@ -1,13 +1,14 @@
 <script>
 	export let props;
 	export let selected;
+	export let onselect = () => {};
 </script>
 
 <style>
 	div {
 		position: relative;
 	}
-	span {
+	span, label {
 		padding: 0 0 0 1.3em;
 	}
 	input {
@@ -19,7 +20,7 @@
 
 <div>
 	<label>
-	    <input type="radio" bind:group={selected} value={props} />
+	    <input type="radio" bind:group={selected} value={props} on:click={() => {onselect()}} />
 	    {props.name}
 	</label>
 </div>

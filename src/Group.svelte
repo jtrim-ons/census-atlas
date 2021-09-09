@@ -5,12 +5,14 @@
 	export let expandAll = false;
 	export let props;
 	export let selected;
+	export let onselect = () => {};
 
 	function toggle() {
 		expanded = !expanded;
 	}
 
 	function radioClick(e) {
+	    onselect();
 		e.stopPropagation();
 	}
 </script>
@@ -24,6 +26,11 @@
 		font-weight: bold;
 		cursor: pointer;
 	}
+	.accordion {
+	    color: rgb(29, 112, 184);
+	    font-size: 24px;
+	    font-weight: 700;
+    }
 	.expanded {
 		background-image: url(../icons/arrow-open.svg);
 	}
@@ -32,6 +39,11 @@
 		margin: 0 0 0 0.5em;
 		list-style: none;
 		border-left: 1px solid #eee;
+	}
+	ul.no-left-border {
+		padding: 0;
+		margin: 0;
+		border-left: none;
 	}
 	li {
 		padding: 0.2em 0;
@@ -51,21 +63,21 @@
 	<input type="radio" bind:group={selected} value={props} on:click={radioClick} />
 	{props.name}
 </span>
-{:else}
-<span class:expanded="{expanded||expandAll}" on:click={toggle}>
+{:else if !props.isRoot}
+<span class:accordion="{props.depth==0}" class:expanded="{expanded||expandAll}" on:click={toggle}>
 	{props.name}
 </span>
 {/if}
 {#if props.code && props.type != 'group-radio'}<small>({props.code})</small>{/if}
 
 {#if expanded || expandAll}
-	<ul>
+	<ul class:no-left-border={props.isRoot}>
 		{#each props.children as child}
             <li class:hidden={child.hidden}>
-                {#if child.type === 'group' || child.type === 'group-radio'}
-                    <svelte:self {expandAll} props={child} bind:selected={selected}/>
+                {#if child.depth != 1 && (child.type === 'group' || child.type === 'group-radio')}
+                    <svelte:self {onselect} {expandAll} props={child} bind:selected={selected}/>
                 {:else}
-                    <Radio props={child} bind:selected={selected}/>
+                    <Radio {onselect} props={child} bind:selected={selected}/>
                 {/if}
             </li>
 		{/each}
