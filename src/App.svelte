@@ -335,8 +335,8 @@
         if (p == null) selectItem = selectTable.children[0];
     }
 	$: selectItem && setSelect(); // Update meta when selection updates
-	$: minAge && loadData(); // Update map when minAge updates
-	$: maxAge && loadData(); // Update map when maxAge updates
+	$: minAge, loadData(); // Update map when minAge updates
+	$: maxAge, loadData(); // Update map when maxAge updates
 	$: active.lad.highlighted = lsoalookup && active.lsoa.hovered ? lsoalookup[active.lsoa.hovered].parent : null;
 	$: active.lad.selected = lsoalookup && active.lsoa.selected ? lsoalookup[active.lsoa.selected].parent : active.lad.selected;
 	$: (data[selectCode] && (active.lad.selected || active.lad.selected == null)) && doSelect();
